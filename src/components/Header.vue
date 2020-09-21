@@ -16,10 +16,10 @@
         </ul>
 
         <ul class="nav navbar-nav ml-auto">
-          <li class="nav-item">
+          <li class="nav-item" @click="endDay()">
             <a class="nav-link" href="#">End Day</a>
           </li>
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown" @click="isOpen = !isOpen">
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -29,10 +29,13 @@
               aria-haspopup="true"
               aria-expanded="false"
             >Save&Load</a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Save Data</a>
+            <div class="dropdown-menu" :class="{show: isOpen}" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#" @click="saveData()">Save Data</a>
               <a class="dropdown-item" href="#">Load Data</a>
             </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Funds: {{ funds | currency }}</a>
           </li>
         </ul>
       </div>
@@ -41,9 +44,38 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+export default {
+  data(){
+    return{
+      isOpen: false
+    }
+  },
+  computed: {
+    funds() {
+      return this.$store.state.funds;
+    }
+  },
+  methods: {
+    ...mapActions(["randomizeStocks"]),
+    endDay() {
+      this.randomizeStocks();
+    },
+    saveData(){
+      const data = {
+        funds: this.$store.state.funds,
+        portfolio: this.$store.state.portfolio,
+        stocks: this.$store.state.stocks
+      }
+      // send to server
+      // this.$http.put('data.json', data)
+      console.log(data)
+    }
+  }
+};
 </script>
 
-<style>
+<style scoped>
 .header a {
   font-size: 1.2rem;
 }
