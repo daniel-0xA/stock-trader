@@ -35,7 +35,6 @@ export default {
   },
   computed: {
     insufficientQuantity() {
-        console.log(typeof this.quantity)
       return this.quantity > this.stock.quantity;
     }
   },

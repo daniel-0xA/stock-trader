@@ -30,8 +30,8 @@
               aria-expanded="false"
             >Save&Load</a>
             <div class="dropdown-menu" :class="{show: isOpen}" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#" @click="saveData()">Save Data</a>
-              <a class="dropdown-item" href="#">Load Data</a>
+              <a class="dropdown-item" href="#" @click="saveData">Save Data</a>
+              <a class="dropdown-item" href="#" @click="loadData">Load Data</a>
             </div>
           </li>
           <li class="nav-item">
@@ -57,19 +57,23 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["randomizeStocks"]),
+    ...mapActions(["randomizeStocks", "fetchData"]),
     endDay() {
       this.randomizeStocks();
     },
     saveData(){
       const data = {
         funds: this.$store.state.funds,
-        portfolio: this.$store.state.portfolio,
+        portfolioStocks: this.$store.state.portfolioStocks,
         stocks: this.$store.state.stocks
       }
       // send to server
-      // this.$http.put('data.json', data)
-      console.log(data)
+      // this.$axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+      console.log(this.$store.state.portfolio)
+      var resp = this.$axios.put('data.json', data)
+    },
+    loadData(){
+      this.fetchData()
     }
   }
 };

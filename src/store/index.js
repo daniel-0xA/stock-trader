@@ -40,6 +40,12 @@ const mutations = {
       state.portfolioStocks.splice(state.portfolioStocks.indexOf(record), 1)
       state.funds += stockPrice * record.quantity;
     }
+  },
+  'SET_PORTFOLIO'(state, portfolioStocks){
+    state.portfolioStocks = portfolioStocks ? portfolioStocks : []
+  },
+  'SET_FUNDS'(state, funds){
+    state.funds = funds
   }
 }
 
@@ -55,7 +61,42 @@ const actions = {
   },
   sellStock({ commit }, order) {
     commit('SELL_STOCK', order)
+  },
+  async fetchData({commit}) {
+    const res = await Vue.axios.get('data.json')
+    try {
+      const data = res.data
+      if(data){
+        const stocks = data.stocks;
+        const funds = data.funds
+        const portfolioStocks = data.portfolioStocks
+
+        commit('SET_STOCKS', stocks)
+        commit('SET_FUNDS', funds)
+        commit('SET_PORTFOLIO', portfolioStocks)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+
+    // Vue.axios.get('data.json')
+    // .then(response => {
+    //   const data = response.data
+    //   if(data){
+    //     const stocks = data.stocks;
+    //     const funds = data.funds
+    //     const portfolioStocks = data.portfolioStocks
+
+    //     commit('SET_STOCKS', stocks)
+    //     commit('SET_FUNDS', funds)
+    //     commit('SET_PORTFOLIO', portfolioStocks)
+    //   }
+    // })
+    // .catch(err => {
+    //   console.log(err)
+    // })
   }
+
 }
 
 const getters = {
